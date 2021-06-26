@@ -3,32 +3,30 @@
 
 let vaAJugarComo = document.createElement("h4");
 let fichaElegida;
-let contenedorBotones = document.getElementById("contenedorBotones");
-let botonX = document.getElementsByClassName("botonX");
-let botonO = document.getElementsByClassName("botonO");
 
 
-botonX[0].onclick = () => {
+
+$(".botonX").on('click', function () {
     fichaElegida = true;
-    contenedorBotones.style.display = "none";
+    $("#contenedorBotones").css('display', 'none');
     sessionStorage.setItem('ficha', 'X');
     console.log("La ficha Elegida es: " + sessionStorage.getItem('ficha')); //funciona bien
     vaAJugarComo.innerHTML = "Vas a jugar como "+ sessionStorage.getItem('ficha');
     vaAJugarComo.style.color = "white";
-    document.getElementById("inicio").appendChild(vaAJugarComo);
-}
+   $("#inicio").append(vaAJugarComo);
+}) 
                                  
-botonO[0].onclick = () => {
+$(".botonO").on('click', function () {
     fichaElegida = false;
-    contenedorBotones.style.display = "none";
+    $("#contenedorBotones").css('display', 'none');
     sessionStorage.setItem('ficha', 'O');
     console.log("La ficha Elegida es: " + sessionStorage.getItem('ficha'));
     vaAJugarComo.innerHTML = "Vas a jugar como " + sessionStorage.getItem('ficha')
     vaAJugarComo.style.color = "white";
-    document.getElementById("inicio").appendChild(vaAJugarComo);
+    $("#inicio").append(vaAJugarComo);
 
 
-}
+})
 
 
 //OCULTAR LAS X Y O AL PRINCIPIO
@@ -48,37 +46,19 @@ for(var i = 0; i < o.length; i++){
 
 //Jugada
 
-let O00 = document.getElementById("O00");
-let X00 = document.getElementById("X00");
-let O01 = document.getElementById("O01");
-let X01 = document.getElementById("X01");
-let O02 = document.getElementById("O02");
-let X02 = document.getElementById("X02");
-let O10 = document.getElementById("O10");
-let X10 = document.getElementById("X10");
-let O11 = document.getElementById("O11");
-let X11 = document.getElementById("X11");
-let O12 = document.getElementById("O12");
-let X12 = document.getElementById("X12");
-let O20 = document.getElementById("O20");
-let X20 = document.getElementById("X20");
-let O21 = document.getElementById("O21");
-let X21 = document.getElementById("X21");
-let O22 = document.getElementById("O22");
-let X22 = document.getElementById("X22");
-
-
+//IDEA: ASIGNAR UN NUMERO A CADA CELDA!! CON EL BUCLE FOR IR AUMENTANDOLO Y SI CORRESPONDE CON LA CELDA AHI VA EL APPEND. !! que el subindice del array celdas coincida con el numero? con un if.
+//
 
 const casilleros = [
-    {id: 00, libre: true, ocupadaPor: true, x: X00, o: O00}, //libre: true indica que la celda esta libre. ocupadaPor: true indicaria que esta ocupada por el jugador, y ocupadaPor: false, que esta ocupada por el rival.
-    {id: 01, libre: true, ocupadaPor: true, x: X01, o: O01},
-    {id: 02, libre: true, ocupadaPor: true, x: X02, o: O02},
-    {id: 10, libre: true, ocupadaPor: true, x: X10, o: O10},
-    {id: 11, libre: true, ocupadaPor: true, x: X11, o: O11},
-    {id: 12, libre: true, ocupadaPor: true, x: X12, o: O12},
-    {id: 20, libre: true, ocupadaPor: true, x: X20, o: O20},
-    {id: 21, libre: true, ocupadaPor: true, x: X21, o: O21},
-    {id: 22, libre: true, ocupadaPor: true, x: X22, o: O22},
+    {id: 00, libre: true, ocupadaPor: 0, nro: 0}, //libre: true indica que la celda esta libre. ocupadaPor: 0 indica que no esta ocupada, 1 que esta ocupada por el usuario y 2 por la compu.
+    {id: 01, libre: true, ocupadaPor: 0, nro: 1},
+    {id: 02, libre: true, ocupadaPor: 0, nro: 2},
+    {id: 10, libre: true, ocupadaPor: 0, nro: 3},
+    {id: 11, libre: true, ocupadaPor: 0, nro: 4},
+    {id: 12, libre: true, ocupadaPor: 0, nro: 5},
+    {id: 20, libre: true, ocupadaPor: 0, nro: 6},
+    {id: 21, libre: true, ocupadaPor: 0, nro: 7},
+    {id: 22, libre: true, ocupadaPor: 0, nro: 8},
     
 ]
 
@@ -94,179 +74,103 @@ const id22 = casilleros.find(casilleros => casilleros.id === 22);
 
 const celdas = document.getElementsByClassName("celda");
 console.log(celdas[0]);
-console.log(casilleros[0].o)
 
-celdas[0].onclick = () => {
-    if (id00.libre == true) {//si el casillero esta libre
-        id00.libre = false; //la celda ya no esta libre
-        console.log(id00.libre);
-        id00.ocupadaPor = true; //indica que la celda se ocupo por el usuario
-        if (fichaElegida == true) { //si la ficha elegida es la X.
-            X00.style.display ="inline-block";
-           }else { //si la ficha elegida es la O
-            O00.style.display ="inline-block";
-            
-           } 
-         jugadaCompu();
-        }else{
-            alert("Ese casillero ya está ocupado!");
-    }
-         
-    }
-
-
-celdas[1].onclick = () => {
-    if (id01.libre == true) {
-        id01.libre = false; 
-        id01.ocupadaPor = true;
-        if (fichaElegida == true) { 
-            X01.style.display ="inline-block";
-           }else { 
-            O01.style.display ="inline-block";
-            
-           } 
-           jugadaCompu();
-    }else{
-        alert("Ese casillero ya está ocupado!"); 
+//que el onclick reciba un parametro, que debe ser el numero que corresponda a la celda. 
+let nroCelda
+for (let i = 0; i < celdas.length; i++) {
+    celdas[i].onclick = () => {
+        nroCelda = i; 
+        console.log(nroCelda); //esto me indca el numero de celda que fue clickeado.
+        writeSymbol(nroCelda);
     }
 }
 
-celdas[2].onclick = () => {
-    if (id02.libre == true) {
-        id02.libre = false; 
-        id02.ocupadaPor = true;
-        if (fichaElegida == true) { 
-            X02.style.display ="inline-block";
-           }else { 
-            O02.style.display ="inline-block";
-            
-           } 
-        jugadaCompu();
-    }else{
-        alert("Ese casillero ya está ocupado!"); 
-    }
-}
-celdas[3].onclick = () => {
-    if (id10.libre == true) {
-        id10.libre = false; 
-        id10.ocupadaPor = true;
-        if (fichaElegida == true) { 
-            X10.style.display ="inline-block";
-           }else { 
-            O10.style.display ="inline-block";
-            
-           } 
-        jugadaCompu();
-    }else{
-        alert("Ese casillero ya está ocupado!"); 
-    }
-}
-celdas[4].onclick = () => {
-    if (id11.libre == true) {
-        id11.libre = false; 
-        id11.ocupadaPor = true;
-        if (fichaElegida == true) { 
-            X11.style.display ="inline-block";
-           }else { 
-            O11.style.display ="inline-block";
-            
-           } 
-        jugadaCompu();
-    }else{
-        alert("Ese casillero ya está ocupado!"); 
-    }
-}
-celdas[5].onclick = () => {
-    if (id12.libre == true) {
-        id12.libre = false; 
-        id12.ocupadaPor = true;
-        if (fichaElegida == true) { 
-            X12.style.display ="inline-block";
-           }else { 
-            O12.style.display ="inline-block";
-            
-           } 
-        jugadaCompu();
-    }else{
-        alert("Ese casillero ya está ocupado!"); 
-    }
-}
-celdas[6].onclick = () => {
-    if (id20.libre == true) {
-        id20.libre = false; 
-        id20.ocupadaPor = true;
-        if (fichaElegida == true) { 
-            X20.style.display ="inline-block";
-           }else { 
-            O20.style.display ="inline-block";
-            
-           } 
-        jugadaCompu();
-    }else{
-        alert("Ese casillero ya está ocupado!"); 
-    }
-}
-celdas[7].onclick = () => {
-    if (id21.libre == true) {
-        id21.libre = false; 
-        id21.ocupadaPor = true;
-        if (fichaElegida == true) { 
-            X21.style.display ="inline-block";
-           }else { 
-            O21.style.display ="inline-block";
-            
-           } 
-        jugadaCompu();
-    }else{
-        alert("Ese casillero ya está ocupado!"); 
-    }
-}
-celdas[8].onclick = () => {
-    if (id22.libre == true) {
-        id22.libre = false; 
-        id22.ocupadaPor = true;
-        if (fichaElegida == true) { 
-            X22.style.display ="inline-block";
-           }else { 
-            O22.style.display ="inline-block";
-            
-           } 
-        jugadaCompu();
-    }else{
-        alert("Ese casillero ya está ocupado!"); 
-    }
-}
-
-//nota ver lo de addeventlistener
-
-
-//Fin del juego
-
-console.log(`Casillero 1: ${casilleros[1].x}`);
-console.log(`Casillero 5: ${casilleros[5].x}`);
-let cell;
-
-const jugadaCompu = () => {
-      for (let e = 0; e < 9; e++) {
-          console.log(`e: ${e}`); //que recorra cada celda
-            if (casilleros[e].libre == true) { //si encuentra una libre
-                if (fichaElegida == false) {
-                cell = casilleros[e].x;// ERROR: esto da null a partir del 4 o 5
-                console.log(`Casillero 6: ${casilleros[6]}`);
-                console.log(`cell: ${cell}`); 
-                cell.style.display="inline-block"; 
-                casilleros[e].libre = false;
-                casilleros[e].ocupadaPor = false;
-                break
-            } else {
-                cell = casilleros[e].o;
-                console.log(`cell: ${cell}`);
-                console.log(`Casillero 6: ${casilleros[6]}`);
-                cell.style.display="inline-block";
-                casilleros[e].libre = false;
-                casilleros[e].ocupadaPor = false;
-                break
-            }
+const writeSymbol = (nCelda) => {
+        if (casilleros[nCelda].libre == true) {
+            casilleros[nCelda].libre = !casilleros[nCelda].libre; // pasa a estar ocupado
+            console.log(`nCelda: ${nCelda}`);
+            casilleros[nCelda].ocupadaPor = 1;
+            console.log(`casillero libre: ${casilleros[nCelda].libre}`); //funciona
+            console.log(`se ecuentra ocupada por ${casilleros[nCelda].ocupadaPor}`); //funciona
+            chosenSymbol (nCelda);
+        }else {
+            alert("Esa celda ya está ocupada!")
         }
+} 
+
+
+
+const chosenSymbol = (nCelda) => {
+    if (fichaElegida == true) {
+        console.log(`La ficha que debe aparecer es X, el numero de celda es: ${nCelda}`);
+        if (nCelda == 0) {
+        $(".c00").append("<span class='x'>X</span>");
+    } else if (nCelda == 1) {
+        $(".c01").append("<span class='x'>X</span>");
+    } else  if (nCelda == 2) {
+        $(".c02").append("<span class='x'>X</span>");
+    } else if (nCelda == 3) {
+        $(".c03").append("<span class='x'>X</span>");
+    } else if (nCelda == 4) {
+        console.log(`paso el else if`)
+        $(".c04").append("<span class='x'>X</span>");
+    } else if (nCelda == 5) {
+        $(".c05").append("<span class='x'>X</span>");
+    } else if (nCelda == 6) {
+        $(".c06").append("<span class='x'>X</span>");
+    } else if (nCelda == 7) {
+        $(".c07").append("<span class='x'>X</span>");
+    } else if (nCelda == 8) {
+        $(".c08").append("<span class='x'>X</span>");
+    }
+}
+    if (fichaElegida == false) {
+        if (nCelda == 0) {
+        $(".c00").append("<span class='o'>O</span>");
+    }   else if (nCelda == 1) {
+        $(".c01").append("<span class='o'>O</span>");
+    }   else if (nCelda == 2) {
+        $(".c02").append("<span class='o'>O</span>");
+    }   else if (nCelda == 3) {
+        $(".c03").append("<span class='o'>O</span>");
+    }   else if (nCelda == 4) {
+        $(".c04").append("<span class='o'>O</span>");
+    }   else if (nCelda == 5) {
+        $(".c05").append("<span class='o'>O</span>");
+    }   else if (nCelda == 6) {
+        $(".c06").append("<span class='o'>O</span>");
+    }   else if (nCelda == 7) {
+        $(".c07").append("<span class='o'>O</span>");
+    }   else if (nCelda == 8) {
+        $(".c08").append("<span class='o'>O</span>");
+    }
 }
 }
+
+
+
+// //Fin del juego
+
+// console.log(`Casillero 1: ${casilleros[1].x}`);
+// console.log(`Casillero 5: ${casilleros[5].x}`);
+
+
+// const jugadaCompu = () => {
+//       for (let e = 0; e < 9; e++) {
+//           console.log(`e: ${e}`); //que recorra cada celda
+//             if (casilleros[e].libre == true) { //si encuentra una libre
+//                 if (fichaElegida == false) {
+//                 casilleros[e].x.style.display="inline-block";// ERROR
+//                 console.log(`Casillero 6: ${casilleros[6]}`); 
+//                 casilleros[e].libre = false;
+//                 casilleros[e].ocupadaPor = false;
+//                 break
+//             } else {
+//                 console.log(`Casillero 6: ${casilleros[6]}`);
+//                 casilleros[e].x.style.display="inline-block"; 
+//                 casilleros[e].libre = false;
+//                 casilleros[e].ocupadaPor = false;
+//                 break
+//             }
+//         }
+// }}

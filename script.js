@@ -8,17 +8,19 @@ let fichaElegida;
 
 $(".botonX").on('click', function () {
     fichaElegida = true;
-    $("#contenedorBotones").css('display', 'none');
+    $("#contenedorBotones").hide(800);
+    //$("#contenedorBotones").css('display', 'none');
     sessionStorage.setItem('ficha', 'X');
     console.log("La ficha Elegida es: " + sessionStorage.getItem('ficha')); //funciona bien
     vaAJugarComo.innerHTML = "Vas a jugar como "+ sessionStorage.getItem('ficha');
     vaAJugarComo.style.color = "white";
-   $("#inicio").append(vaAJugarComo);
-}) 
+   $("#inicio").append(vaAJugarComo)
+})
                                  
 $(".botonO").on('click', function () {
     fichaElegida = false;
-    $("#contenedorBotones").css('display', 'none');
+    $("#contenedorBotones").hide(800);
+    //$("#contenedorBotones").css('display', 'none');
     sessionStorage.setItem('ficha', 'O');
     console.log("La ficha Elegida es: " + sessionStorage.getItem('ficha'));
     vaAJugarComo.innerHTML = "Vas a jugar como " + sessionStorage.getItem('ficha')
@@ -93,6 +95,7 @@ const writeSymbol = (nCelda) => {
             console.log(`casillero libre: ${casilleros[nCelda].libre}`); //funciona
             console.log(`se ecuentra ocupada por ${casilleros[nCelda].ocupadaPor}`); //funciona
             chosenSymbol (nCelda);
+            jugadaCompu();
         }else {
             alert("Esa celda ya está ocupada!")
         }
@@ -146,8 +149,41 @@ const chosenSymbol = (nCelda) => {
     }
 }
 }
+/*
+const writeX = () => {
 
+}
 
+const writeO = () => {
+
+}*/
+//Jugada compu
+let nRandom;
+const jugadaCompu = () => {
+    //estaPorGanar(); //funcion que va a checkear si el usuario va ganando.
+    for (let e = 0; e < 9; e++) {
+        elegirCeldaRandom(0,9);
+        break;
+    }
+}
+
+const elegirCeldaRandom = (min, max) => {
+   /* let nRandom = Math.random();
+    nRandom = Math.floor(nRandom*10);
+    console.log(`numero random: ${nRandom}`);*/
+    nRandom = Math.random() * (max - min) + min;
+    nRandom = Math.floor(nRandom);
+    console.log(`numero random ${nRandom}`);
+    oponentsSymbol(nRandom);
+    
+    
+}
+
+const oponentsSymbol = (nroCelda) => {
+    if (casilleros[nroCelda].libre == true) {
+
+    }
+}
 
 // //Fin del juego
 

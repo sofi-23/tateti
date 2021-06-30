@@ -3,22 +3,26 @@
 
 let vaAJugarComo = document.createElement("h4");
 let fichaElegida;
-
-
+const elegirFichaX = () => {
+    return fichaElegida = true;
+}
+const elegirFichaO = () => {
+    return fichaElegida = false;
+}
 
 $(".botonX").on('click', function () {
-    fichaElegida = true;
+    elegirFichaX();
     $("#contenedorBotones").hide(800);
     //$("#contenedorBotones").css('display', 'none');
     sessionStorage.setItem('ficha', 'X');
     console.log("La ficha Elegida es: " + sessionStorage.getItem('ficha')); //funciona bien
     vaAJugarComo.innerHTML = "Vas a jugar como "+ sessionStorage.getItem('ficha');
     vaAJugarComo.style.color = "white";
-   $("#inicio").append(vaAJugarComo)
+    $("#inicio").append(vaAJugarComo);
 })
                                  
 $(".botonO").on('click', function () {
-    fichaElegida = false;
+    elegirFichaO();
     $("#contenedorBotones").hide(800);
     //$("#contenedorBotones").css('display', 'none');
     sessionStorage.setItem('ficha', 'O');
@@ -48,9 +52,6 @@ for(var i = 0; i < o.length; i++){
 
 //Jugada
 
-//IDEA: ASIGNAR UN NUMERO A CADA CELDA!! CON EL BUCLE FOR IR AUMENTANDOLO Y SI CORRESPONDE CON LA CELDA AHI VA EL APPEND. !! que el subindice del array celdas coincida con el numero? con un if.
-//
-
 const casilleros = [
     {id: 00, libre: true, ocupadaPor: 0, nro: 0}, //libre: true indica que la celda esta libre. ocupadaPor: 0 indica que no esta ocupada, 1 que esta ocupada por el usuario y 2 por la compu.
     {id: 01, libre: true, ocupadaPor: 0, nro: 1},
@@ -63,16 +64,6 @@ const casilleros = [
     {id: 22, libre: true, ocupadaPor: 0, nro: 8},
     
 ]
-
-const id00 = casilleros.find(casilleros => casilleros.id === 00);
-const id01 = casilleros.find(casilleros => casilleros.id === 01);
-const id02 = casilleros.find(casilleros => casilleros.id === 02);
-const id10 = casilleros.find(casilleros => casilleros.id === 10);
-const id11 = casilleros.find(casilleros => casilleros.id === 11);
-const id12 = casilleros.find(casilleros => casilleros.id === 12);
-const id20 = casilleros.find(casilleros => casilleros.id === 20);
-const id21 = casilleros.find(casilleros => casilleros.id === 21);
-const id22 = casilleros.find(casilleros => casilleros.id === 22);
 
 const celdas = document.getElementsByClassName("celda");
 console.log(celdas[0]);
@@ -94,17 +85,20 @@ const writeSymbol = (nCelda) => {
             casilleros[nCelda].ocupadaPor = 1;
             console.log(`casillero libre: ${casilleros[nCelda].libre}`); //funciona
             console.log(`se ecuentra ocupada por ${casilleros[nCelda].ocupadaPor}`); //funciona
-            chosenSymbol (nCelda);
+            write (nCelda);
             jugadaCompu();
         }else {
             alert("Esa celda ya está ocupada!")
         }
 } 
-
-
-
-const chosenSymbol = (nCelda) => {
+const write = (celda) => {
     if (fichaElegida == true) {
+        writeX(celda);
+    }else{
+        writeO(celda);
+    }
+}
+const writeX = (nCelda) => {
         console.log(`La ficha que debe aparecer es X, el numero de celda es: ${nCelda}`);
         if (nCelda == 0) {
         $(".c00").append("<span class='x'>X</span>");
@@ -127,7 +121,8 @@ const chosenSymbol = (nCelda) => {
         $(".c08").append("<span class='x'>X</span>");
     }
 }
-    if (fichaElegida == false) {
+
+const writeO = (nCelda) => {
         if (nCelda == 0) {
         $(".c00").append("<span class='o'>O</span>");
     }   else if (nCelda == 1) {
@@ -148,15 +143,7 @@ const chosenSymbol = (nCelda) => {
         $(".c08").append("<span class='o'>O</span>");
     }
 }
-}
-/*
-const writeX = () => {
 
-}
-
-const writeO = () => {
-
-}*/
 //Jugada compu
 let nRandom;
 const jugadaCompu = () => {
@@ -168,45 +155,32 @@ const jugadaCompu = () => {
 }
 
 const elegirCeldaRandom = (min, max) => {
-   /* let nRandom = Math.random();
-    nRandom = Math.floor(nRandom*10);
-    console.log(`numero random: ${nRandom}`);*/
     nRandom = Math.random() * (max - min) + min;
     nRandom = Math.floor(nRandom);
     console.log(`numero random ${nRandom}`);
     oponentsSymbol(nRandom);
-    
-    
 }
 
-const oponentsSymbol = (nroCelda) => {
-    if (casilleros[nroCelda].libre == true) {
-
+const oponentsSymbol = (nroCelda) => { //si esta ocupada que vuelva a hacerlo
+    if (casilleros[nroCelda].libre == true) { 
+        if (fichaElegida == false) {
+        writeX(nroCelda);
+        casilleros[nroCelda].libre = false;
+        casilleros[nroCelda].ocupadaPor = 2;
+    }else{ 
+        writeO(nroCelda);
+        casilleros[nroCelda].libre = false;
+        casilleros[nroCelda].ocupadaPor = 2;}
+    }else{
+        checkearSiEstaTodoOcupado();
     }
 }
 
-// //Fin del juego
 
-// console.log(`Casillero 1: ${casilleros[1].x}`);
-// console.log(`Casillero 5: ${casilleros[5].x}`);
+const checkearSiEstaTodoOcupado = () => {
+    if (casilleros[0].libre == false && casilleros[1].libre == false && casilleros[2].libre == false && casilleros[3].libre == false && casilleros[4].libre == false && casilleros[5].libre == false && casilleros[6].libre == false && casilleros[7].libre == false && casilleros[8].libre == false) {     
+    console.log(`juego terminado`);
+    }else{ elegirCeldaRandom(0,9)}        
+    }
 
 
-// const jugadaCompu = () => {
-//       for (let e = 0; e < 9; e++) {
-//           console.log(`e: ${e}`); //que recorra cada celda
-//             if (casilleros[e].libre == true) { //si encuentra una libre
-//                 if (fichaElegida == false) {
-//                 casilleros[e].x.style.display="inline-block";// ERROR
-//                 console.log(`Casillero 6: ${casilleros[6]}`); 
-//                 casilleros[e].libre = false;
-//                 casilleros[e].ocupadaPor = false;
-//                 break
-//             } else {
-//                 console.log(`Casillero 6: ${casilleros[6]}`);
-//                 casilleros[e].x.style.display="inline-block"; 
-//                 casilleros[e].libre = false;
-//                 casilleros[e].ocupadaPor = false;
-//                 break
-//             }
-//         }
-// }}

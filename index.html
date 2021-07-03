@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link  rel="icon"   href="logo.jpg" type="image/jpg" />
+    <title>Ta te tí</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+   <div id="contenedorBotones">  
+        <h3 class="h3Seleccion">Choose X or O</h3>
+        <div class="botones">
+        <div class="boton botonX"><span class="xo">X</span></div>
+        <div class="boton botonO"><span class="xo">O</span></div>
+        </div>
+    </div>
+    <div id="inicio" class="inicio">
+        <h1>TIC-TAC-TOE</h1>   
+    </div>
+    <div class="contTablero">
+        <div class="tablero">
+            <div class="celda c00">
+            </div>
+            <div class="celda c01">
+            </div>
+            <div class="celda c02">
+            </div>
+            <div class="celda c03">
+            </div>
+            <div class="celda c04">
+            </div>
+            <div class="celda c05">
+            </div>
+            <div class="celda c06">
+            </div>
+            <div class="celda c07">
+            </div>
+            <div class="celda c08">
+            </div>
+        </div>
+    </div>
+    <div class="contenedorBoton">
+        <button class="botonActualizar">Refresh</button>
+    </div>
+    
+    <div class="mensaje" id="winningMessage">
+        <div class="contenedorMensaje">
+            <span>You win!</span>
+            <div class="contenedorBoton">
+                <button class="botonActualizar botonActualizar2">Refresh</button>
+            </div>
+        </div>
+    </div>
+    <div class="mensaje" id="losingMessage">
+        <div class="contenedorMensaje">
+            <span>You lose!</span>
+            <div class="contenedorBoton">
+                <button class="botonActualizar botonActualizar2">Refresh</button>
+            </div>
+        </div>
+    </div>
+    <script src="jquery-3.6.0.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

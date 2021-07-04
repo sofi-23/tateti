@@ -136,7 +136,7 @@ h1 {
     width: 100%;
     height: 125%;
     left: 0;
-    background: green;
+    background: rgb(22, 193, 22, .5);
     top: 0;
 
 }
@@ -150,14 +150,14 @@ h1 {
 }
 
 .contenedorMensaje span {
-    font-size: 5rem;
+    font-size: 6rem;
     color: black;
 }
 
 .botonActualizar2 {
-    background: darkgreen;
-    color: black;
-    border: 1px solid black;
+    background: black;
+    color: green;
+    border: 1px solid green;
     padding: .8rem;
     font-size: 1em;
     border-radius: 5px;
@@ -167,7 +167,8 @@ h1 {
 }
 
 .botonActualizar2:hover {
-    background: black;
+    background: darkgreen;
     cursor:pointer;
-    color: green;
+    color: black;
+    
 }

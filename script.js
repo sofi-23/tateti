@@ -67,8 +67,9 @@ for (let i = 0; i < cells.length; i++) {
        /*1)*/ humansTurn(noCell);//Primero, escribe X u O en la celda que se clickeó
        /*2)*/ theresWinner(); //después, checkea si hay un ganador. Si lo hay, muestra un mensaje y se actualiza la página
        /*3)*/ checkTie(); // después, checkea si hay un empate. De haberlo, muestra un mensaje y se actualiza la página.
-       /*4)*/ computersTurn(); // de no haber empate, es el turno de la compu. 
-       /*5)theresWinner();*/ 
+       if (humanWins==false){
+       /*4)*/ computersTurn(); // de no haber empate y si el usuario no ganó, es el turno de la compu. 
+        }
     }
 }
 
@@ -182,7 +183,7 @@ const checkTie = () => {
             break
         }else{tie=true;} //de no darse nunca la condición del if, hay empate. Como ya se fijó si hay un ganador, sabemos que nadie ganó-
     }
-    if (tie == true) { 
+    if (tie == true && humanWins == false) { 
         tieMessage();
     }
     console.log("TIE :" + tie);
@@ -209,7 +210,7 @@ const allBoxesOcuppied = () => {
 
 
 let tie;
-let winner = false; //no hay un ganador al principio.
+let humanWins = false; // variable agregada para solucionar error, cuando ganaba el humano y después ganaba la compu, aparecía you lose. 
 
 
 const theresWinner = () => {
@@ -217,8 +218,9 @@ const theresWinner = () => {
         if (boxes[0].occupiedBy == 1 && boxes[1].occupiedBy == 1 && boxes[2].occupiedBy == 1) { // si esta ocupado por el jugador 1...
             winningMessage();
             tie = false;
+            humanWins = true;
             
-        }else if (boxes[0].occupiedBy == 2 && boxes[1].occupiedBy == 2 && boxes[2].occupiedBy == 2) { //si esta ocupado porr la compu
+        }else if (boxes[0].occupiedBy == 2 && boxes[1].occupiedBy == 2 && boxes[2].occupiedBy == 2 && humanWins == false) { //si esta ocupado por la compu
             losingMessage();
             tie = false;
         }
@@ -227,7 +229,8 @@ const theresWinner = () => {
         if (boxes[3].occupiedBy == 1 && boxes[4].occupiedBy == 1 && boxes[5].occupiedBy == 1) { // si esta ocupado por el jugador 1...
             winningMessage();
             tie = false;
-        }else if (boxes[3].occupiedBy == 2 && boxes[4].occupiedBy == 2 && boxes[5].occupiedBy == 2) { //si esta ocupado porr la compu
+            humanWins = true;
+        }else if (boxes[3].occupiedBy == 2 && boxes[4].occupiedBy == 2 && boxes[5].occupiedBy == 2 && humanWins == false) { //si esta ocupado porr la compu
             losingMessage();
             tie = false;
         }
@@ -236,7 +239,8 @@ const theresWinner = () => {
         if (boxes[6].occupiedBy == 1 && boxes[7].occupiedBy == 1 && boxes[8].occupiedBy == 1) { // si esta ocupado por el jugador 1...
             winningMessage();
             tie = false;
-        }else if (boxes[6].occupiedBy == 2 && boxes[7].occupiedBy == 2 && boxes[8].occupiedBy == 2) { //si esta ocupado porr la compu
+            humanWins = true;
+        }else if (boxes[6].occupiedBy == 2 && boxes[7].occupiedBy == 2 && boxes[8].occupiedBy == 2 && humanWins == false) { //si esta ocupado porr la compu
             losingMessage();
             tie = false;
         }
@@ -245,7 +249,8 @@ const theresWinner = () => {
         if (boxes[0].occupiedBy == 1 && boxes[4].occupiedBy == 1 && boxes[8].occupiedBy == 1) { // si esta ocupado por el jugador 1...
             winningMessage();
             tie = false;
-        }else if (boxes[0].occupiedBy == 2 && boxes[4].occupiedBy == 2 && boxes[8].occupiedBy == 2) { //si esta ocupado porr la compu
+            humanWins = true;
+        }else if (boxes[0].occupiedBy == 2 && boxes[4].occupiedBy == 2 && boxes[8].occupiedBy == 2 && humanWins == false) { //si esta ocupado porr la compu
             losingMessage();
             tie = false;
         }
@@ -254,7 +259,8 @@ const theresWinner = () => {
         if (boxes[2].occupiedBy == 1 && boxes[4].occupiedBy == 1 && boxes[6].occupiedBy == 1) {
             winningMessage();
             tie = false;
-        }else if (boxes[2].occupiedBy == 2 && boxes[4].occupiedBy == 2 && boxes[6].occupiedBy == 2) { //si esta ocupado porr la compu
+            humanWins = true;
+        }else if (boxes[2].occupiedBy == 2 && boxes[4].occupiedBy == 2 && boxes[6].occupiedBy == 2 && humanWins == false) { //si esta ocupado porr la compu
             losingMessage();
             tie = false;
         }
@@ -262,9 +268,9 @@ const theresWinner = () => {
     if (boxes[0].empty == false && boxes[3].empty == false && boxes[6].empty == false){ //primero checkea si se ocupo la linea
         if (boxes[0].occupiedBy == 1 && boxes[3].occupiedBy == 1 && boxes[6].occupiedBy == 1) { // si esta ocupado por el jugador 1...
             winningMessage();
-            
+            humanWins = true;
             tie = false;
-        }else if (boxes[0].occupiedBy == 2 && boxes[3].occupiedBy == 2 && boxes[6].occupiedBy == 2) { //si esta ocupado porr la compu
+        }else if (boxes[0].occupiedBy == 2 && boxes[3].occupiedBy == 2 && boxes[6].occupiedBy == 2 && humanWins == false) { //si esta ocupado porr la compu
             losingMessage();
             tie = false;
         }
@@ -273,7 +279,8 @@ const theresWinner = () => {
         if (boxes[1].occupiedBy == 1 && boxes[4].occupiedBy == 1 && boxes[7].occupiedBy == 1) { // si esta ocupado por el jugador 1...
             winningMessage();
             tie = false;
-        }else if (boxes[1].occupiedBy == 2 && boxes[4].occupiedBy == 2 && boxes[7].occupiedBy == 2) { //si esta ocupado porr la compu
+            humanWins = true;
+        }else if (boxes[1].occupiedBy == 2 && boxes[4].occupiedBy == 2 && boxes[7].occupiedBy == 2 && humanWins == false) { //si esta ocupado porr la compu
             losingMessage();
             tie = false;
         }
@@ -282,7 +289,8 @@ const theresWinner = () => {
         if (boxes[2].occupiedBy == 1 && boxes[5].occupiedBy == 1 && boxes[8].occupiedBy == 1) { // si esta ocupado por el jugador 1...
             winningMessage();
             tie = false;
-        }else if (boxes[2].occupiedBy == 2 && boxes[5].occupiedBy == 2 && boxes[8].occupiedBy == 2) { //si esta ocupado porr la compu
+            humanWins = true;
+        }else if (boxes[2].occupiedBy == 2 && boxes[5].occupiedBy == 2 && boxes[8].occupiedBy == 2 && humanWins == false) { //si esta ocupado porr la compu
             losingMessage();
             tie = false;
         }

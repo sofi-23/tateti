@@ -1,247 +1,290 @@
-//OCULTAR MENSAJES FINALES
+//OCULTAR MENSAJES DE VICTORIA, DERROTA Y EMPATE.
 
 const hideMessages = () => {
     $(".mensaje").hide();
 }
 hideMessages();
 
-
 //SELECCION DE FICHA
 
-let vaAJugarComo = document.createElement("h4");
-let fichaElegida;
-const elegirFichaX = () => {
-    return fichaElegida = true;
+let playAs = document.createElement("h4");
+let selectedPlayer;
+
+const chooseX = () => {
+    return selectedPlayer = true; //true es X
 }
-const elegirFichaO = () => {
-    return fichaElegida = false;
+const chooseO = () => {
+    return selectedPlayer = false; //false es O
 }
 
 $(".botonX").on('click', function () {
-    elegirFichaX();
+    chooseX();
     $("#contenedorBotones").hide(800);
     sessionStorage.setItem('ficha', 'X');
     console.log("La ficha Elegida es: " + sessionStorage.getItem('ficha')); //funciona bien
-    vaAJugarComo.innerHTML = "You'll play as "+ sessionStorage.getItem('ficha');
-    vaAJugarComo.style.color = "white";
-    $("#inicio").append(vaAJugarComo);
+    playAs.innerHTML = "You'll play as "+ sessionStorage.getItem('ficha');
+    playAs.style.color = "white";
+    $("#inicio").append(playAs);
 })
 
 $(".botonO").on('click', function () {
-    elegirFichaO();
+    chooseO();
     $("#contenedorBotones").hide(800);
     sessionStorage.setItem('ficha', 'O');
     console.log("La ficha Elegida es: " + sessionStorage.getItem('ficha'));
-    vaAJugarComo.innerHTML = "You'll play as " + sessionStorage.getItem('ficha')
-    vaAJugarComo.style.color = "white";
-    $("#inicio").append(vaAJugarComo);
+    playAs.innerHTML = "You'll play as " + sessionStorage.getItem('ficha')
+    playAs.style.color = "white";
+    $("#inicio").append(playAs);
 
 
 })
 
 //Jugada
 
-const casilleros = [
-    {libre: true, ocupadaPor: 0, nro: 0}, //libre: true indica que la celda esta libre. ocupadaPor: 0 indica que no esta ocupada, 1 que esta ocupada por el usuario y 2 por la compu.
-    {libre: true, ocupadaPor: 0, nro: 1},
-    {libre: true, ocupadaPor: 0, nro: 2},
-    {libre: true, ocupadaPor: 0, nro: 3},
-    {libre: true, ocupadaPor: 0, nro: 4},
-    {libre: true, ocupadaPor: 0, nro: 5},
-    {libre: true, ocupadaPor: 0, nro: 6},
-    {libre: true, ocupadaPor: 0, nro: 7},
-    {libre: true, ocupadaPor: 0, nro: 8},
+const boxes = [
+    {empty: true, occupiedBy: 0, number: 0}, //empty: true indica que la celda esta libre. occupiedBy: 0 indica que no esta ocupada, 1 que esta ocupada por el usuario y 2 por la compu.
+    {empty: true, occupiedBy: 0, number: 1},
+    {empty: true, occupiedBy: 0, number: 2},
+    {empty: true, occupiedBy: 0, number: 3},
+    {empty: true, occupiedBy: 0, number: 4},
+    {empty: true, occupiedBy: 0, number: 5},
+    {empty: true, occupiedBy: 0, number: 6},
+    {empty: true, occupiedBy: 0, number: 7},
+    {empty: true, occupiedBy: 0, number: 8},
     
 ]
 
-const celdas = document.getElementsByClassName("celda");
-console.log(celdas[0]);
+//IDEA!!!!!! QUE CHECKEE EL GANADOR DISTINTO, DESPUES DE LA JUGADA DEL USUARIO Y DE LA COMPU. 
+const cells = document.getElementsByClassName("celda");
+
 
 //que el onclick reciba un parametro, que debe ser el numero que corresponda a la celda. 
-let nroCelda
-for (let i = 0; i < celdas.length; i++) {
-    celdas[i].onclick = () => {
-        nroCelda = i; 
-        
-        console.log(nroCelda); //esto me indca el numero de celda que fue clickeado.
-        writeSymbol(nroCelda);
-        hayLinea();
-        jugadaCompu();
-        hayLinea();
+let noCell
+for (let i = 0; i < cells.length; i++) {
+    cells[i].onclick = () => {
+        noCell = i; 
+        console.log(noCell); //esto me indca el numero de celda que fue clickeado.
+       /*1)*/ humansTurn(noCell);//Primero, escribe X u O en la celda que se clickeó
+       /*2)*/ theresWinner(); //después, checkea si hay un ganador. Si lo hay, muestra un mensaje y se actualiza la página
+       /*3)*/ checkTie(); // después, checkea si hay un empate. De haberlo, muestra un mensaje y se actualiza la página.
+       /*4)*/ computersTurn(); // de no haber empate, es el turno de la compu. 
+       /*5)theresWinner();*/ 
     }
 }
 
-const writeSymbol = (nCelda) => {
-        if (casilleros[nCelda].libre == true) {
-            casilleros[nCelda].libre = !casilleros[nCelda].libre; // pasa a estar ocupado
-            console.log(`nCelda: ${nCelda}`);
-            casilleros[nCelda].ocupadaPor = 1;
-            console.log(`casillero libre: ${casilleros[nCelda].libre}`); //funciona
-            console.log(`se ecuentra ocupada por ${casilleros[nCelda].ocupadaPor}`); //funciona
-            write (nCelda);
-           
-        }else {
-            alert("Esa celda ya está ocupada!")
-            writeSymbol();
+const humansTurn = (nCell) => {
+        if (boxes[nCell].empty == true) {
+            boxes[nCell].empty = !boxes[nCell].empty; // pasa a estar ocupado
+            console.log(`nCell: ${nCell}`);
+            boxes[nCell].occupiedBy = 1;
+            console.log(`casillero libre: ${boxes[nCell].empty}`); //funciona
+            console.log(`se ecuentra ocupada por ${boxes[nCell].occupiedBy}`); //funciona
+            write (nCell);
         }
-} 
+        else {
+            alert("Esa celda ya está ocupada!")
+            humansTurn();
+        }
+}
+
 const write = (celda) => {
-    if (fichaElegida == true) {
+    if (selectedPlayer == true) {
         writeX(celda);
     }else{
         writeO(celda);
     }
 }
-const writeX = (nCelda) => {
-        console.log(`La ficha que debe aparecer es X, el numero de celda es: ${nCelda}`);
-        if (nCelda == 0) {
+const writeX = (nCell) => {
+        console.log(`La ficha que debe aparecer es X, el numero de celda es: ${nCell}`);
+        if (nCell == 0) {
         $(".c00").append("<span class='x'>X</span>");
-    } else if (nCelda == 1) {
+    } else if (nCell == 1) {
         $(".c01").append("<span class='x'>X</span>");
-    } else  if (nCelda == 2) {
+    } else  if (nCell == 2) {
         $(".c02").append("<span class='x'>X</span>");
-    } else if (nCelda == 3) {
+    } else if (nCell == 3) {
         $(".c03").append("<span class='x'>X</span>");
-    } else if (nCelda == 4) {
+    } else if (nCell == 4) {
         console.log(`paso el else if`)
         $(".c04").append("<span class='x'>X</span>");
-    } else if (nCelda == 5) {
+    } else if (nCell == 5) {
         $(".c05").append("<span class='x'>X</span>");
-    } else if (nCelda == 6) {
+    } else if (nCell == 6) {
         $(".c06").append("<span class='x'>X</span>");
-    } else if (nCelda == 7) {
+    } else if (nCell == 7) {
         $(".c07").append("<span class='x'>X</span>");
-    } else if (nCelda == 8) {
+    } else if (nCell == 8) {
         $(".c08").append("<span class='x'>X</span>");
     }
 }
 
-const writeO = (nCelda) => {
-        if (nCelda == 0) {
+const writeO = (nCell) => {
+        if (nCell == 0) {
         $(".c00").append("<span class='o'>O</span>");
-    }   else if (nCelda == 1) {
+    }   else if (nCell == 1) {
         $(".c01").append("<span class='o'>O</span>");
-    }   else if (nCelda == 2) {
+    }   else if (nCell == 2) {
         $(".c02").append("<span class='o'>O</span>");
-    }   else if (nCelda == 3) {
+    }   else if (nCell == 3) {
         $(".c03").append("<span class='o'>O</span>");
-    }   else if (nCelda == 4) {
+    }   else if (nCell == 4) {
         $(".c04").append("<span class='o'>O</span>");
-    }   else if (nCelda == 5) {
+    }   else if (nCell == 5) {
         $(".c05").append("<span class='o'>O</span>");
-    }   else if (nCelda == 6) {
+    }   else if (nCell == 6) {
         $(".c06").append("<span class='o'>O</span>");
-    }   else if (nCelda == 7) {
+    }   else if (nCell == 7) {
         $(".c07").append("<span class='o'>O</span>");
-    }   else if (nCelda == 8) {
+    }   else if (nCell == 8) {
         $(".c08").append("<span class='o'>O</span>");
     }
 }
 
 //Jugada compu
 let nRandom;
-const jugadaCompu = () => {
+const computersTurn = () => {
     //estaPorGanar(); //funcion que va a checkear si el usuario va ganando.
     for (let e = 0; e < 9; e++) {
-        elegirCeldaRandom(0,9); // que antes de ejecutar esta funcion, se fije si esta terminado el juego.
+        chooseRandomBox(0,9); // que antes de ejecutar esta funcion, se fije si esta terminado el juego.
         break;
-    
-}
+    }
 }
 
-const elegirCeldaRandom = (min, max) => {
+const chooseRandomBox = (min, max) => {
     nRandom = Math.random() * (max - min) + min;
     nRandom = Math.floor(nRandom);
     console.log(`numero random ${nRandom}`);
-    oponentsSymbol(nRandom);
+    oponentsLetter(nRandom);
 }
 
-const oponentsSymbol = (nroCelda) => { //si esta ocupada que vuelva a hacerlo
-    if (casilleros[nroCelda].libre == true) { 
-        if (fichaElegida == false) {
+const oponentsLetter = (nroCelda) => { 
+    if (boxes[nroCelda].empty == true) { //si el casillero está vacío
+        if (selectedPlayer == false) {
         writeX(nroCelda);
         
-        casilleros[nroCelda].libre = false;
-        casilleros[nroCelda].ocupadaPor = 2;
+        boxes[nroCelda].empty = false;
+        boxes[nroCelda].occupiedBy = 2;
     }else{ 
         writeO(nroCelda);
  
-        casilleros[nroCelda].libre = false;
-        casilleros[nroCelda].ocupadaPor = 2;}
+        boxes[nroCelda].empty = false;
+        boxes[nroCelda].occupiedBy = 2;}
     }else{
-        checkearSiEstaTodoOcupado();
+       allBoxesOcuppied();
     }
-  //hayLinea();
+    theresWinner();
+}
+
+const checkTie = () => {
+    for (box of boxes) {
+        if (box.empty  == true) { //see fija si alguna de las celdas está vacía
+            tie = false; //si al menos una está vacía, no hay empate. 
+            break
+        }else{tie=true;} //de no darse nunca la condición del if, hay empate. Como ya se fijó si hay un ganador, sabemos que nadie ganó-
+    }
+    if (tie == true) { 
+        tieMessage();
+    }
+    console.log("TIE :" + tie);
 }
 
 
-const checkearSiEstaTodoOcupado = () => {
-    if (casilleros[0].libre == false && casilleros[1].libre == false && casilleros[2].libre == false && casilleros[3].libre == false && casilleros[4].libre == false && casilleros[5].libre == false && casilleros[6].libre == false && casilleros[7].libre == false && casilleros[8].libre == false) {     
-    console.log(`juego terminado`);
-    }else{ elegirCeldaRandom(0,9)}        
+const allBoxesOcuppied = () => {
+    for (box of boxes) {
+        if (box.empty  == true) {
+            tie = false;
+            break;
+        }else{tie=true}
+    
+    }if (tie == false){ 
+        chooseRandomBox(0,9);
+    }else { 
+        theresWinner();//hacer un let winner y si no lo hay, que salga el tie. almacenarlo en sessionStorage. 
+         if (tie== true) {
+        tieMessage()
     }
+    }
+    }        
 
 
 
+let tie;
+let winner = false; //no hay un ganador al principio.
 
 
-const hayLinea = () => {
-    if (casilleros[0].libre == false && casilleros[1].libre == false && casilleros[2].libre == false){ //primero checkea si se ocupo la linea
-        if (casilleros[0].ocupadaPor == 1 && casilleros[1].ocupadaPor == 1 && casilleros[2].ocupadaPor == 1) { // si esta ocupado por el jugador 1...
+const theresWinner = () => {
+    if (boxes[0].empty == false && boxes[1].empty == false && boxes[2].empty == false){ //primero checkea si se ocupo la linea
+        if (boxes[0].occupiedBy == 1 && boxes[1].occupiedBy == 1 && boxes[2].occupiedBy == 1) { // si esta ocupado por el jugador 1...
+            winningMessage();
+            tie = false;
+            
+        }else if (boxes[0].occupiedBy == 2 && boxes[1].occupiedBy == 2 && boxes[2].occupiedBy == 2) { //si esta ocupado porr la compu
+            losingMessage();
+            tie = false;
+        }
+    }
+    if (boxes[3].empty == false && boxes[4].empty == false && boxes[5].empty == false){ //primero checkea si se ocupo la linea
+        if (boxes[3].occupiedBy == 1 && boxes[4].occupiedBy == 1 && boxes[5].occupiedBy == 1) { // si esta ocupado por el jugador 1...
+            winningMessage();
+            tie = false;
+        }else if (boxes[3].occupiedBy == 2 && boxes[4].occupiedBy == 2 && boxes[5].occupiedBy == 2) { //si esta ocupado porr la compu
+            losingMessage();
+            tie = false;
+        }
+    }
+    if (boxes[6].empty == false && boxes[7].empty == false && boxes[8].empty == false){ //primero checkea si se ocupo la linea
+        if (boxes[6].occupiedBy == 1 && boxes[7].occupiedBy == 1 && boxes[8].occupiedBy == 1) { // si esta ocupado por el jugador 1...
+            winningMessage();
+            tie = false;
+        }else if (boxes[6].occupiedBy == 2 && boxes[7].occupiedBy == 2 && boxes[8].occupiedBy == 2) { //si esta ocupado porr la compu
+            losingMessage();
+            tie = false;
+        }
+    }
+    if (boxes[0].empty == false && boxes[4].empty == false && boxes[8].empty == false){ //primero checkea si se ocupo la linea
+        if (boxes[0].occupiedBy == 1 && boxes[4].occupiedBy == 1 && boxes[8].occupiedBy == 1) { // si esta ocupado por el jugador 1...
+            winningMessage();
+            tie = false;
+        }else if (boxes[0].occupiedBy == 2 && boxes[4].occupiedBy == 2 && boxes[8].occupiedBy == 2) { //si esta ocupado porr la compu
+            losingMessage();
+            tie = false;
+        }
+    }
+    if (boxes[2].empty == false && boxes[4].empty == false && boxes[6].empty == false){ 
+        if (boxes[2].occupiedBy == 1 && boxes[4].occupiedBy == 1 && boxes[6].occupiedBy == 1) {
+            winningMessage();
+            tie = false;
+        }else if (boxes[2].occupiedBy == 2 && boxes[4].occupiedBy == 2 && boxes[6].occupiedBy == 2) { //si esta ocupado porr la compu
+            losingMessage();
+            tie = false;
+        }
+    }
+    if (boxes[0].empty == false && boxes[3].empty == false && boxes[6].empty == false){ //primero checkea si se ocupo la linea
+        if (boxes[0].occupiedBy == 1 && boxes[3].occupiedBy == 1 && boxes[6].occupiedBy == 1) { // si esta ocupado por el jugador 1...
             winningMessage();
             
-        }else if (casilleros[0].ocupadaPor == 2 && casilleros[1].ocupadaPor == 2 && casilleros[2].ocupadaPor == 2) { //si esta ocupado porr la compu
+            tie = false;
+        }else if (boxes[0].occupiedBy == 2 && boxes[3].occupiedBy == 2 && boxes[6].occupiedBy == 2) { //si esta ocupado porr la compu
             losingMessage();
-            
+            tie = false;
         }
     }
-    if (casilleros[3].libre == false && casilleros[4].libre == false && casilleros[5].libre == false){ //primero checkea si se ocupo la linea
-        if (casilleros[3].ocupadaPor == 1 && casilleros[4].ocupadaPor == 1 && casilleros[5].ocupadaPor == 1) { // si esta ocupado por el jugador 1...
+    if (boxes[1].empty == false && boxes[4].empty == false && boxes[7].empty == false){ //primero checkea si se ocupo la linea
+        if (boxes[1].occupiedBy == 1 && boxes[4].occupiedBy == 1 && boxes[7].occupiedBy == 1) { // si esta ocupado por el jugador 1...
             winningMessage();
-        }else if (casilleros[3].ocupadaPor == 2 && casilleros[4].ocupadaPor == 2 && casilleros[5].ocupadaPor == 2) { //si esta ocupado porr la compu
+            tie = false;
+        }else if (boxes[1].occupiedBy == 2 && boxes[4].occupiedBy == 2 && boxes[7].occupiedBy == 2) { //si esta ocupado porr la compu
             losingMessage();
+            tie = false;
         }
     }
-    if (casilleros[6].libre == false && casilleros[7].libre == false && casilleros[8].libre == false){ //primero checkea si se ocupo la linea
-        if (casilleros[6].ocupadaPor == 1 && casilleros[7].ocupadaPor == 1 && casilleros[8].ocupadaPor == 1) { // si esta ocupado por el jugador 1...
+    if (boxes[2].empty == false && boxes[5].empty == false && boxes[8].empty == false){ //primero checkea si se ocupo la linea
+        if (boxes[2].occupiedBy == 1 && boxes[5].occupiedBy == 1 && boxes[8].occupiedBy == 1) { // si esta ocupado por el jugador 1...
             winningMessage();
-        }else if (casilleros[6].ocupadaPor == 2 && casilleros[7].ocupadaPor == 2 && casilleros[8].ocupadaPor == 2) { //si esta ocupado porr la compu
+            tie = false;
+        }else if (boxes[2].occupiedBy == 2 && boxes[5].occupiedBy == 2 && boxes[8].occupiedBy == 2) { //si esta ocupado porr la compu
             losingMessage();
-        }
-    }
-    if (casilleros[0].libre == false && casilleros[4].libre == false && casilleros[8].libre == false){ //primero checkea si se ocupo la linea
-        if (casilleros[0].ocupadaPor == 1 && casilleros[4].ocupadaPor == 1 && casilleros[8].ocupadaPor == 1) { // si esta ocupado por el jugador 1...
-            winningMessage();
-        }else if (casilleros[0].ocupadaPor == 2 && casilleros[4].ocupadaPor == 2 && casilleros[8].ocupadaPor == 2) { //si esta ocupado porr la compu
-            losingMessage();
-        }
-    }
-    if (casilleros[2].libre == false && casilleros[4].libre == false && casilleros[6].libre == false){ 
-        if (casilleros[2].ocupadaPor == 1 && casilleros[4].ocupadaPor == 1 && casilleros[6].ocupadaPor == 1) {
-            winningMessage();
-        }else if (casilleros[2].ocupadaPor == 2 && casilleros[4].ocupadaPor == 2 && casilleros[6].ocupadaPor == 2) { //si esta ocupado porr la compu
-            losingMessage();
-        }
-    }
-    if (casilleros[0].libre == false && casilleros[3].libre == false && casilleros[6].libre == false){ //primero checkea si se ocupo la linea
-        if (casilleros[0].ocupadaPor == 1 && casilleros[3].ocupadaPor == 1 && casilleros[6].ocupadaPor == 1) { // si esta ocupado por el jugador 1...
-            winningMessage();
-        }else if (casilleros[0].ocupadaPor == 2 && casilleros[3].ocupadaPor == 2 && casilleros[6].ocupadaPor == 2) { //si esta ocupado porr la compu
-            losingMessage();
-        }
-    }
-    if (casilleros[1].libre == false && casilleros[4].libre == false && casilleros[7].libre == false){ //primero checkea si se ocupo la linea
-        if (casilleros[1].ocupadaPor == 1 && casilleros[4].ocupadaPor == 1 && casilleros[7].ocupadaPor == 1) { // si esta ocupado por el jugador 1...
-            winningMessage();
-        }else if (casilleros[1].ocupadaPor == 2 && casilleros[4].ocupadaPor == 2 && casilleros[7].ocupadaPor == 2) { //si esta ocupado porr la compu
-            losingMessage();
-        }
-    }
-    if (casilleros[2].libre == false && casilleros[5].libre == false && casilleros[8].libre == false){ //primero checkea si se ocupo la linea
-        if (casilleros[2].ocupadaPor == 1 && casilleros[5].ocupadaPor == 1 && casilleros[8].ocupadaPor == 1) { // si esta ocupado por el jugador 1...
-            winningMessage();
-        }else if (casilleros[2].ocupadaPor == 2 && casilleros[5].ocupadaPor == 2 && casilleros[8].ocupadaPor == 2) { //si esta ocupado porr la compu
-            losingMessage();
+            tie = false;
         }
     }
 } 
@@ -259,6 +302,12 @@ const losingMessage = () => {
     $("#losingMessage").show();
 }
 
+//Mensaje empate
+
+
+const tieMessage = () => {
+    $("#tieMessage").show()
+}
 
 //Finalizar/actualizar juego
 

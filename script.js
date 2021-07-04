@@ -38,27 +38,32 @@ $(".botonO").on('click', function () {
 
 
 })
+//Json hecho solo para la entrega.
+let json = "celdas.json";
+const boxes = []; //nuevo array al que voy a pushear los datos del json
+
+
+const getJASON = () => {
+    $.getJSON(json, function (respuesta, estado) {
+
+        if (estado == "success") {
+            let boxesJson = respuesta;
+            console.log(cells);
+            for (box of boxesJson) {
+                boxes.push({empty: box.empty, ocuppiedBy: box.ocuppiedBy, number: box.number}); 
+                console.log(boxes);
+            }
+        }
+    })}
+getJASON();
+
 
 //Jugada
 
-const boxes = [
-    {empty: true, occupiedBy: 0, number: 0}, //empty: true indica que la celda esta libre. occupiedBy: 0 indica que no esta ocupada, 1 que esta ocupada por el usuario y 2 por la compu.
-    {empty: true, occupiedBy: 0, number: 1},
-    {empty: true, occupiedBy: 0, number: 2},
-    {empty: true, occupiedBy: 0, number: 3},
-    {empty: true, occupiedBy: 0, number: 4},
-    {empty: true, occupiedBy: 0, number: 5},
-    {empty: true, occupiedBy: 0, number: 6},
-    {empty: true, occupiedBy: 0, number: 7},
-    {empty: true, occupiedBy: 0, number: 8},
-    
-]
-
-//IDEA!!!!!! QUE CHECKEE EL GANADOR DISTINTO, DESPUES DE LA JUGADA DEL USUARIO Y DE LA COMPU. 
 const cells = document.getElementsByClassName("celda");
 
 
-//que el onclick reciba un parametro, que debe ser el numero que corresponda a la celda. 
+
 let noCell
 for (let i = 0; i < cells.length; i++) {
     cells[i].onclick = () => {
